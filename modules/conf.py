@@ -6,6 +6,7 @@
 import os
 import json
 
+
 def checkConfPresence(location=''):
     '''
     check in given directory if file is present
@@ -19,6 +20,27 @@ def checkConfPresence(location=''):
         if os.path.isdir(location) != False:
             return 1  # target is not a file
         else:
-            return 0 # target found
+            return 0  # target found
     else:
-        return -1 # target not found
+        return -1  # target not found
+
+
+def firstDaySetup():
+    '''
+    setup function used for first-day-of-use scenario
+    actually, there's only file path to-be-configured since ... this script is quite specific
+    '''
+    global filePath
+
+    filePath = input(
+        'Please enter directory for database storage (absolute path)\n')
+    confFile = open('/usr/share/Bookkeeper' + '/config.json', 'w')
+    json.dump({'DB path': filePath}, confFile, indent=4)
+    confFile.close()
+    if input('Enter "N"(capital) to skip database initialization (do this only when you already have a db file)\n') == 'N':
+        return 1
+    (conn, stat) = db.db_open(filePath + '/bkp.db', True)  # force a file creation
+    conn.close()
+    db.db_newTable(tbName=tb_name, tbSchema={
+                   'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT'}, location=filePath + '/bkp.db')
+    return 0

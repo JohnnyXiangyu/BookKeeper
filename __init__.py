@@ -53,19 +53,19 @@ if __name__ == "__main__":
         if c == 'n' or c == 'N':
             exit(120)
         else:
-            firstDaySetup()
+            conf.firstDaySetup()
     elif confPresence == 1:
         print('"config.json" is used as a directory name, please remove that directory from installed location')
         exit()
-    elif confPresence == 0:
-        confFile = open('/usr/share/Bookkeeper' + '/config.json', 'r')
-        try:
-            confObj = json.load(confFile)
-            confFile.close()
-            filePath = confObj['DB path']
-        except (KeyError, json.decoder.JSONDecodeError):
-            print(
-                'Configuration file mis-formatted. Please remove existing configuration file and try again.')
+
+    confFile = open('/usr/share/Bookkeeper' + '/config.json', 'r')
+    try:
+        confObj = json.load(confFile)
+        confFile.close()
+        filePath = confObj['DB path']
+    except (KeyError, json.decoder.JSONDecodeError):
+        print(
+            'Configuration file mis-formatted. Please remove existing configuration file and try again.')
 
     # parse options
     version_msg = "%prog 0.1 beta"
