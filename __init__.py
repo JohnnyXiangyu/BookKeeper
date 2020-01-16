@@ -32,7 +32,7 @@ def firstDaySetup():
     global filePath
 
     filePath = input(
-        'Please enter directory for database storage (absolute path)')
+        'Please enter directory for database storage (absolute path)\n')
     confFile = open('/usr/share/Bookkeeper' + '/config.json', 'w')
     json.dump({'DB path': filePath}, confFile, indent=4)
     confFile.close()
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         # confirmation
         print('Record to upload: ' + str(newRecord))
         confirm = input('Confirm? y/N\n')
-        if confirm != 'y' or confirm != 'Y':
+        if confirm != 'y' and confirm != 'Y':
             print('Cancelled.')
             exit()
         # upload data
@@ -107,4 +107,4 @@ if __name__ == "__main__":
             for item in row:
                 print(item, end=', ')
             print('')
-        print('\nRecords retrieved.')
+        print('Records retrieved.')
