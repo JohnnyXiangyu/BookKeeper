@@ -41,13 +41,14 @@ def firstDaySetup():
     (conn, stat) = db.db_open(filePath + '/bkp.db', True)  # force a file creation
     conn.close()
     db.db_newTable(tbName=tb_name, tbSchema={
-                   'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT'}, location=filePath + '/bkp.db')
+                   'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT', 'AVAILABLE': 'REAL', 'SAVED': 'REAL'}, location=filePath + '/bkp.db')
     return 0
 
 
 if __name__ == "__main__":
     # check configuration status
-    confPresence = conf.checkConfPresence('/usr/share/Bookkeeper' + '/config.json')
+    confPresence = conf.checkConfPresence(
+        '/usr/share/Bookkeeper' + '/config.json')
     if confPresence == -1:
         c = input('Configuration file not found, configure now? Y/n\n')
         if c == 'n' or c == 'N':
@@ -84,6 +85,7 @@ if __name__ == "__main__":
         newRecord = {}
         newRecord.update({'DATE': "'" + str(date.today()) + "'",
                           'TIMEZONE': "'" + str(tz) + "'", 'AMOUNT': vars(options)['newRecord']})
+        # TODO: add code for available/saved calculation
         # user inputs
         category = "'" + input('Specify transection category: ') + "'"
         detail = "'" + input('Specify transection detail and comments: ') + "'"
