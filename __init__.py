@@ -33,10 +33,12 @@ def firstDaySetup():
 
     filePath = input(
         'Please enter directory for database storage (absolute path)')
-    confFile = open(os.getcwd() + '/config.json', 'w')
+    confFile = open('/usr/share/Bookkeeper' + '/config.json', 'w')
     json.dump({'DB path': filePath}, confFile, indent=4)
     confFile.close()
-    (conn, ) = db.db_open(filePath + '/bkp.db', True)  # force a file creation
+    if input('Enter "N"(capital) to skip database initialization (do this only when you already have a db file)\n') == 'N':
+        return 1
+    (conn, stat) = db.db_open(filePath + '/bkp.db', True)  # force a file creation
     conn.close()
     db.db_newTable(tbName=tb_name, tbSchema={
                    'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT'}, location=filePath + '/bkp.db')
@@ -45,7 +47,7 @@ def firstDaySetup():
 
 if __name__ == "__main__":
     # check configuration status
-    confPresence = conf.checkConfPresence(os.getcwd() + '/config.json')
+    confPresence = conf.checkConfPresence('/usr/share/Bookkeeper' + '/config.json')
     if confPresence == -1:
         c = input('Configuration file not found, configure now? Y/n\n')
         if c == 'n' or c == 'N':
@@ -56,7 +58,7 @@ if __name__ == "__main__":
         print('"config.json" is used as a directory name, please remove that directory from installed location')
         exit()
     elif confPresence == 0:
-        confFile = open(os.getcwd() + '/config.json', 'r')
+        confFile = open('/usr/share/Bookkeeper' + '/config.json', 'r')
         try:
             confObj = json.load(confFile)
             confFile.close()
@@ -73,7 +75,7 @@ if __name__ == "__main__":
     parser.add_option("-w", "--write", action="store", dest="newRecord",
                       help="add a spending record of specified amount")
     parser.add_option("-r", "--read", action="store", dest="lines",
-                      help="read given number of lines of financial record")
+                      help="read latest given number of lines of financial record")
     options, args = parser.parse_args(sys.argv[1:])
 
     if vars(options)['newRecord']:
@@ -99,7 +101,7 @@ if __name__ == "__main__":
 
     if vars(options)['lines']:
         found = db.tb_retrieve(tbName=tb_name, columns=[
-              'DATE', 'TIMEZONE', 'AMOUNT', 'CATEGORY', 'DETAIL'], count=int(vars(options)['lines']), location=filePath+'/bkp.db')
+            'DATE', 'TIMEZONE', 'AMOUNT', 'CATEGORY', 'DETAIL'], count=int(vars(options)['lines']), location=filePath+'/bkp.db')
         print('DATE, TIMEZONE, AMOUNT, CATEGORY, DETAIL')
         for row in found:
             for item in row:

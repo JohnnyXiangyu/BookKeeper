@@ -118,7 +118,6 @@ def tb_retrieve(tbName='', columns=[], count=1, location=''):
         return stat
     cur = conn.cursor()
     cur.execute(command)
-
     rows = cur.fetchall()
-
+    conn.close()
     return rows

@@ -4,3 +4,7 @@ install:
 	cp -avr modules /usr/share/Bookkeeper
 	chmod 777 /usr/share/Bookkeeper/__init__.py
 	ln -s /usr/share/Bookkeeper/__init__.py /usr/bin/bkp
+
+uninstall:
+	rm -rf /usr/share/Bookkeeper/
+	rm -f /usr/bin/bkp
