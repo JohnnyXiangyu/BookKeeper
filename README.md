@@ -12,3 +12,5 @@
 ## TODOs  
 
  When there's no db file at given location, prompt the user to create a new one.
+ (mentioned in py files) Add more columns and corresponding logic  
+ add notification system (okay this one should be customizable)  
