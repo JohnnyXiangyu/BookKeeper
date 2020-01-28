@@ -11,4 +11,5 @@
 
 ## TODOs  
 
- When there's no db file at given location, prompt the user to create a new one.
+ When there's no db file at given location, prompt the user to create a new one.  
+ Store config files under user directories.  
