@@ -21,28 +21,28 @@ import json
 # setup is required when config file is missing. [v]
 
 filePath = ''
-tb_name = 'myfinance'
+
+template_table = conf.TableStructure()
 
 
-def firstDaySetup():
-    '''
-    setup function used for first-day-of-use scenario
-    actually, there's only file path to-be-configured since ... this script is quite specific
-    '''
-    global filePath
+# def firstDaySetup():
+#     '''
+#     setup function used for first-day-of-use scenario
+#     actually, there's only file path to-be-configured since ... this script is quite specific
+#     '''
+#     global filePath
 
-    filePath = input(
-        'Please enter directory for database storage (absolute path)\n')
-    confFile = open('/usr/share/Bookkeeper' + '/config.json', 'w')
-    json.dump({'DB path': filePath}, confFile, indent=4)
-    confFile.close()
-    if input('Enter "N"(capital) to skip database initialization (do this only when you already have a db file)\n') == 'N':
-        return 1
-    (conn, stat) = db.db_open(filePath + '/bkp.db', True)  # force a file creation
-    conn.close()
-    db.db_newTable(tbName=tb_name, tbSchema={
-                   'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT'}, location=filePath + '/bkp.db')
-    return 0
+#     filePath = input(
+#         'Please enter directory for database storage (absolute path)\n')
+#     confFile = open('/usr/share/Bookkeeper' + '/config.json', 'w')
+#     json.dump({'DB path': filePath}, confFile, indent=4)
+#     confFile.close()
+#     if input('Enter "N"(capital) to skip database initialization (do this only when you already have a db file)\n') == 'N':
+#         return 1
+#     (conn, stat) = db.db_open(filePath + '/bkp.db', True)  # force a file creation
+#     conn.close()
+#     db.db_newTable(tbName=tb_name, tbSchema=template_table.columns, location=filePath + '/bkp.db')
+#     return 0
 
 
 if __name__ == "__main__":
@@ -99,12 +99,12 @@ if __name__ == "__main__":
             print('Cancelled.')
             exit()
         # upload data
-        db.tb_insert(tbName=tb_name, location=filePath +
+        db.tb_insert(tbName=template_table.name, location=filePath +
                      '/bkp.db', lnContent=newRecord)
         print('New record uploaded.')
 
     if vars(options)['lines']:
-        found = db.tb_retrieve(tbName=tb_name, columns=[
+        found = db.tb_retrieve(tbName=template_table.name, columns=[
             'DATE', 'TIMEZONE', 'AMOUNT', 'CATEGORY', 'DETAIL'], count=int(vars(options)['lines']), location=filePath+'/bkp.db')
         print('DATE, TIMEZONE, AMOUNT, CATEGORY, DETAIL')
         for row in found:
