@@ -21,6 +21,7 @@ class TableStructure:
         self.columns = {'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL',
                         'CATEGORY': 'TEXT', 'DETAIL': 'TEXT', 'AVAILABLE': 'REAL', 'SAVED': 'REAL'}
         self.name = 'myFinance'
+        self.config_file_name = 'bookeeper_config.json'
 
 
 def checkConfPresence(location=''):
@@ -50,16 +51,36 @@ def firstDaySetup():
     new_table = TableStructure()
     filePath = ''
 
+    # initialize file path, user input or default (/home/username/Documents)
     filePath = input(
-        'Please enter directory for database storage (absolute path)\n')
-    
-    confFile = open('/usr/share/Bookkeeper' + '/config.json', 'w')
+        'Please enter directory for database storage (absolute path); press ENTER to locate your db at a default local directory \n')
+    if filePath == '':
+        filePath = os.path.join(os.path.expanduser('~'), 'Documents')
+
+    # try to create a config file (must be under /home/username/Documents), not found -> create directory first
+    try:
+        confFile = open(os.path.join(os.path.expanduser('~'),
+                                     'Documents', new_table.config_file_name), 'w')
+    except FileNotFoundError:
+        os.mkdir(os.path.join(os.path.expanduser('~'), 'Documents'))
+        confFile = open(os.path.join(os.path.expanduser('~'),
+                                     'Documents', new_table.config_file_name), 'w')
+
+    # write the json
     json.dump({'DB path': filePath}, confFile, indent=4)
     confFile.close()
-    if input('Enter "N"(capital) to skip database initialization (do this only when you already have a db file)\n') == 'N':
+
+    # prompt the usr whether to skip database initialization
+    if input('Enter "No!"(capital) to skip database initialization (do this only when you already have a db file)\n') == 'No!':
         return 1
-    (conn, stat) = db.db_open(filePath + '/bkp.db', True)  # force a file creation
+
+    # create new database
+    (conn, stat) = db.db_open(os.path.join(
+        filePath, '/bkp.db'), True)  # force a file creation
+    print('database module responds ' + str(stat))
     conn.close()
+
+    # create table
     db.db_newTable(tbName=new_table.name, tbSchema={
-                   'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT'}, location=filePath + '/bkp.db')
+                   'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT'}, location=os.path.join(filePath, '/bkp.db'))
     return 0
