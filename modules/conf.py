@@ -18,8 +18,9 @@ class TableStructure:
         '''
         define a bunch of data structures that represent some shared info
         '''
-        self.columns = {'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AMOUNT': 'REAL',
-                        'CATEGORY': 'TEXT', 'DETAIL': 'TEXT', 'AVAILABLE': 'REAL', 'SAVED': 'REAL'}
+        # TODO: redesign this! think about how to prompt the user for change?
+        self.columns = {'DATE': 'TEXT', 'TIMEZONE': 'TEXT', 'AVAILABLE_CHANGE': 'REAL', 'SAVED_CHANGE': 'REAL', 
+                        'CASH_CHANGE': 'REAL', 'CATEGORY': 'TEXT', 'DETAIL': 'TEXT', 'AVAILABLE_SUBTOTAL': 'REAL', 'SAVED_SUBTOTAL': 'REAL'}
         self.name = 'myFinance'
         self.config_file_name = 'bookeeper_config.json'
 
