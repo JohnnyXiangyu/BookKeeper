@@ -26,10 +26,10 @@ class TableStructure:
 
 def checkConfPresence(location=''):
     '''
-    check in given directory if file is present\n
-    1: target is not file\n
-    0: file is present\n
-    -1: file is not present\n
+    check in given directory if file is present
+    1: target is not file
+    0: file is present
+    -1: file is not present
     '''
     fileName = os.path.basename(location)
     filePath = os.path.dirname(location)
@@ -42,7 +42,6 @@ def checkConfPresence(location=''):
         return -1  # target not found
 
 
-# this function is defined in __init__.py
 def firstDaySetup():
     '''
     setup function used for first-day-of-use scenario\n
