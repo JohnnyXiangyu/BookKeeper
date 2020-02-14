@@ -47,7 +47,8 @@ def firstDaySetup():
 
 if __name__ == "__main__":
     # check configuration status
-    confPresence = conf.checkConfPresence('/usr/share/Bookkeeper' + '/config.json')
+    confPresence = conf.checkConfPresence(
+        '/usr/share/Bookkeeper' + '/config.json')
     if confPresence == -1:
         c = input('Configuration file not found, configure now? Y/n\n')
         if c == 'n' or c == 'N':
@@ -72,10 +73,12 @@ if __name__ == "__main__":
     usage_msg = """%prog [OPTION]... FILE\n
     Simple bookkeeping utility."""
     parser = OptionParser(version=version_msg, usage=usage_msg)
-    parser.add_option("-w", "--write", action="store", dest="newRecord",
+    parser.add_option("-w", "--write", action="store_ture", dest="write",
                       help="add a spending record of specified amount")
-    parser.add_option("-r", "--read", action="store", dest="lines",
+    parser.add_option("-r", "--read", action="store_true", dest="read",
                       help="read latest given number of lines of financial record")
+    parser.add_option("-b", "--break", action="store_true",
+                      dest="break", help="break records, start a new time section")
     options, args = parser.parse_args(sys.argv[1:])
 
     if vars(options)['newRecord']:
@@ -85,6 +88,7 @@ if __name__ == "__main__":
         newRecord.update({'DATE': "'" + str(date.today()) + "'",
                           'TIMEZONE': "'" + str(tz) + "'", 'AMOUNT': vars(options)['newRecord']})
         # user inputs
+        # TODO: add loop that run through all fields, like: available, saved, ... and have user input change inputs
         category = "'" + input('Specify transection category: ') + "'"
         detail = "'" + input('Specify transection detail and comments: ') + "'"
         newRecord.update({'CATEGORY': str(category), 'DETAIL': str(detail)})
