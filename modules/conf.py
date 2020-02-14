@@ -10,8 +10,8 @@ import db_utils as db
 
 class TableStructure:
     '''
-    this class is used only to share statically defined table structure
-    there's currently no plan to add dynamic database design (for now cuz I'm dumb)
+    this class is used only to share statically defined table structure\n
+    there's currently no plan to add dynamic database design (for now cuz I'm dumb)\n
     '''
 
     def __init__(self):
@@ -26,10 +26,10 @@ class TableStructure:
 
 def checkConfPresence(location=''):
     '''
-    check in given directory if file is present
-    1: target is not file
-    0: file is present
-    -1: file is not present
+    check in given directory if file is present\n
+    1: target is not file\n
+    0: file is present\n
+    -1: file is not present\n
     '''
     fileName = os.path.basename(location)
     filePath = os.path.dirname(location)
@@ -45,7 +45,7 @@ def checkConfPresence(location=''):
 # this function is defined in __init__.py
 def firstDaySetup():
     '''
-    setup function used for first-day-of-use scenario
+    setup function used for first-day-of-use scenario\n
     actually, there's only file path to-be-configured since ... this script is quite specific
     '''
     new_table = TableStructure()
