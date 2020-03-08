@@ -1,1 +1,47 @@
+body {
+    background-color: black;
+    color: #96b38a;
+}
 
+.login_input label {
+    width: 95px;
+    padding-right: 5px;
+}
+
+.login_input input {
+    width: 200px;
+    height: 16px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: inherit;
+}
+
+.login_input {
+    padding-bottom: 5px;
+}
+
+.sub input {
+    background-color: transparent;
+    color: #96b38a;
+    border: none;
+}
+
+.sub input:hover {
+    background-color: #96b38a;
+    color: black;
+    border: none;
+}
+
+button {
+    background-color: transparent;
+    color: #96b38a;
+    border: none;
+    padding: 0%;
+}
+
+button:hover {
+    background-color: #96b38a;
+    color: black;
+    border: none;
+}
