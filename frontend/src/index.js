@@ -2,11 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// class Editor extends React.Component {
-//     render() {
-//         return <div>editor</div>;
-//     }
-// }
+class Menu extends React.Component {
+    render() {
+        return (
+        <div>
+            <p>this is menu</p> 
+            <button onClick={this.props.onReturn}>BACK</button>
+        </div>);
+    }
+}
 
 class Login extends React.Component {
     render() {
@@ -23,6 +27,7 @@ class Login extends React.Component {
     }
 }
 
+// the container of all components, FSM controller
 class MainPanel extends React.Component {
     constructor(props) {
         super(props);
@@ -31,14 +36,25 @@ class MainPanel extends React.Component {
                 id: "",
                 passwd: "",
             }, // credential from 
-            state: "login", // state of application (e.g. before login)
+            state: "login", // states: login, menu, post, get, processing post, processing get
             key: "", // a key to identify user from server
         };
     }
 
-    // send a request to backend server for a session key
+    // handle "back" behavior from each panel
+    goBack(name) {
+        if (name === "menu") {
+            this.logOut();
+            this.setState({
+                state: "login",
+                key: "",
+            })
+        }
+    }
+
+    // send a request to backend server for a session key (with fetch API)
     // for now just settle for plain text, tho the key would be a random hash
-    requestKey(credential = {}) {
+    logIn(credential = {}) {
         const url = "http://localhost:9000/login";
         fetch(url, {
             method: "POST",
@@ -50,7 +66,22 @@ class MainPanel extends React.Component {
             body: JSON.stringify(credential),
         })
             .then((res) => res.text())
-            .then((res) => this.setState({key: res}));
+            .then((res) => {
+                if (res === "yes") {
+                    this.setState({
+                        key: res,
+                        state: "menu",
+                    })
+                }
+                else {
+                    alert("Login failed: wrong credentials!")
+                }
+            });
+    }
+
+    // TODO: tell server to delete current session key
+    logOut() {
+        console.log("log out");
     }
 
     loginSubmitHandler = (event) => {
@@ -64,17 +95,30 @@ class MainPanel extends React.Component {
             passwd: passwd,
         };
 
-        this.requestKey(credential);
+        this.logIn(credential);
     }
 
     render() {
         let toDisplay;
-        if (this.state.key !== "") {
-            toDisplay = <div>{this.state.key}</div>;
-        }
-        else {
+        const state = this.state.state;
+        if (state === "login") {
             toDisplay = <Login onSubmit={this.loginSubmitHandler}/>;
         }
+        else if (state === "menu") {
+            toDisplay = <Menu onReturn={() => this.goBack("menu")} />;
+        }
+        // else if (state === "post") {
+
+        // }
+        // else if (state === "get") {
+
+        // }
+        // else if (state === "processing post") {
+
+        // }
+        // else if (state === "processing get") {
+
+        // }
         return toDisplay;
     }
 }
