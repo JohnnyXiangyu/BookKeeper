@@ -2,13 +2,37 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+class GetPanel extends React.Component {
+    render() {
+        return (
+            <div>
+                <p>this is get panel</p>
+                <button onClick={() => this.props.onReturn()}>BACK TO MENU</button>
+            </div>
+        );
+    }
+}
+
+class PostPanel extends React.Component {
+    render() {
+        return (
+            <div>
+                <p>this is post panel</p>
+                <button onClick={this.props.onReturn}>BACK TO MENU</button>
+            </div>
+        );
+    }
+}
+
 class Menu extends React.Component {
     render() {
         return (
-        <div>
-            <p>this is menu</p> 
-            <button onClick={this.props.onReturn}>BACK</button>
-        </div>);
+            <div>
+                <p>this is menu</p>
+                <button onClick={() => this.props.nav("post")}>UPLOAD RECORD</button>
+                <button onClick={() => this.props.nav("get")}>VIEW RECORDS</button>
+                <button onClick={this.props.onReturn}>LOG OUT</button>
+            </div>);
     }
 }
 
@@ -22,7 +46,7 @@ class Login extends React.Component {
                 <p>Password</p>
                 <input type="text" name="passwd" />
                 <input type="submit" />
-            </form>    
+            </form>
         );
     }
 }
@@ -42,13 +66,28 @@ class MainPanel extends React.Component {
     }
 
     // handle "back" behavior from each panel
-    goBack(name) {
-        if (name === "menu") {
+    goBack(state) {
+        if (state === "menu") {
             this.logOut();
             this.setState({
                 state: "login",
                 key: "",
             })
+        }
+        else if (state === "post" || state === "get") {
+            this.setState({ state: "menu" });
+        }
+    }
+
+    // handle navigation from menu
+    goFromMenu(state) {
+        if (state === "post" || state === "get") {
+            this.setState({
+                state: state,
+            });
+        }
+        else {
+            alert("goto state: " + state + " not registered");
         }
     }
 
@@ -81,7 +120,7 @@ class MainPanel extends React.Component {
 
     // TODO: tell server to delete current session key
     logOut() {
-        console.log("log out");
+        alert("log out!");
     }
 
     loginSubmitHandler = (event) => {
@@ -102,23 +141,31 @@ class MainPanel extends React.Component {
         let toDisplay;
         const state = this.state.state;
         if (state === "login") {
-            toDisplay = <Login onSubmit={this.loginSubmitHandler}/>;
+            toDisplay = <Login onSubmit={this.loginSubmitHandler} />;
         }
         else if (state === "menu") {
-            toDisplay = <Menu onReturn={() => this.goBack("menu")} />;
+            toDisplay = <Menu
+                onReturn={() => this.goBack("menu")}
+                nav={(i) => this.goFromMenu(i)}
+            />;
         }
-        // else if (state === "post") {
-
-        // }
-        // else if (state === "get") {
-
-        // }
+        else if (state === "post") {
+            toDisplay = <PostPanel
+                onReturn={() => this.goBack("post")}
+            />;
+        }
+        else if (state === "get") {
+            toDisplay = <GetPanel
+                onReturn={() => this.goBack("get")}
+            />;
+        }
         // else if (state === "processing post") {
 
         // }
         // else if (state === "processing get") {
 
         // }
+
         return toDisplay;
     }
 }
