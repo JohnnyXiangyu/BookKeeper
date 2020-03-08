@@ -14,10 +14,34 @@ class GetPanel extends React.Component {
 }
 
 class PostPanel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            state: "init", // states include: init, pending, done
+        }
+    }
+
+    submit() {
+
+    }
+
     render() {
+        let message;
+        if (this.state.state === "init") {
+            message = "WAITING FOR INPUT";
+        }
+        else if (this.state.state === "pending") {
+            message = "PROCESSING NEW SUBMISSION";
+        }
+        else if (this.state.state === "done") {
+            message = "RECORDS SUBMITTED";
+        }
+        else {
+            alert("unrecoganized state: " + this.state.state);
+        }
         return (
             <div>
-                <p>this is post panel</p>
+                <p>{message}</p>
                 <button onClick={this.props.onReturn}>BACK TO MENU</button>
             </div>
         );
@@ -30,7 +54,9 @@ class Menu extends React.Component {
             <div>
                 <p>this is menu</p>
                 <button onClick={() => this.props.nav("post")}>UPLOAD RECORD</button>
+                <br />
                 <button onClick={() => this.props.nav("get")}>VIEW RECORDS</button>
+                <br />
                 <button onClick={this.props.onReturn}>LOG OUT</button>
             </div>);
     }
@@ -39,19 +65,25 @@ class Menu extends React.Component {
 class Login extends React.Component {
     render() {
         return (
-            <form onSubmit={this.props.onSubmit}>
-                <p>User ID</p>
-                <input type="text" name="id" />
-                <br />
-                <p>Password</p>
-                <input type="text" name="passwd" />
-                <input type="submit" />
+            <form onSubmit={this.props.onSubmit} class="login_panel" autocomplete="off">
+                <div class="login_input">
+                    <label for="id">[username]</label>
+                    <input type="text" name="id" />
+                </div>
+                <div class="login_input">
+                    <label for="passwd">[psssword]</label>
+                    <input type="text" name="passwd" />
+                </div>
+                <div class="sub">
+                    <input type="submit" value="LOGIN"/>
+                </div>
             </form>
         );
     }
 }
 
 // the container of all components, FSM controller
+// store data here
 class MainPanel extends React.Component {
     constructor(props) {
         super(props);
@@ -104,11 +136,11 @@ class MainPanel extends React.Component {
             redirect: "follow",
             body: JSON.stringify(credential),
         })
-            .then((res) => res.text())
+            .then((res) => res.json())
             .then((res) => {
-                if (res === "yes") {
+                if (res.valid === "yes") {
                     this.setState({
-                        key: res,
+                        key: res.key,
                         state: "menu",
                     })
                 }
