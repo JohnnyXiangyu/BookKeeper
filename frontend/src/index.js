@@ -52,7 +52,7 @@ class Menu extends React.Component {
     render() {
         return (
             <div>
-                <p>this is menu</p>
+                <p>THIS IS MENU</p>
                 <button onClick={() => this.props.nav("post")}>UPLOAD RECORD</button>
                 <br />
                 <button onClick={() => this.props.nav("get")}>VIEW RECORDS</button>
