@@ -67,12 +67,10 @@ class Login extends React.Component {
         return (
             <form onSubmit={this.props.onSubmit} class="login_panel" autocomplete="off">
                 <div class="login_input">
-                    <label for="id">[username]</label>
-                    <input type="text" name="id" />
+                    <input type="text" name="id" placeholder="[username]"/>
                 </div>
                 <div class="login_input">
-                    <label for="passwd">[psssword]</label>
-                    <input type="text" name="passwd" />
+                    <input type="text" name="passwd" placeholder="[password]"/>
                 </div>
                 <div class="sub">
                     <input type="submit" value="LOGIN"/>
@@ -142,10 +140,11 @@ class MainPanel extends React.Component {
                     this.setState({
                         key: res.key,
                         state: "menu",
-                    })
+                    });
                 }
                 else {
                     alert("Login failed: wrong credentials!")
+                    console.log(res);
                 }
             });
     }
