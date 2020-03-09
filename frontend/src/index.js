@@ -124,7 +124,7 @@ class MainPanel extends React.Component {
     // send a request to backend server for a session key (with fetch API)
     // for now just settle for plain text, tho the key would be a random hash
     logIn(credential = {}) {
-        const url = "http://localhost:9000/login";
+        const url = "http://169.232.171.10:9000/login";
         fetch(url, {
             method: "POST",
             cache: "no-cache",

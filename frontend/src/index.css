@@ -12,11 +12,12 @@ body {
 }
 
 .login_input input {
-    width: 200px;
+    width: 100%;
     height: 16px;
     background-color: transparent;
     border: none;
     outline: none;
+    padding: 0%;
     color: inherit;
     font: inherit;
 }
@@ -33,7 +34,7 @@ body {
     font: inherit;
 }
 
-.sub input:hover {
+.sub input:hover:active {
     background-color: #96b38a;
     color: black;
     border: none;
@@ -47,8 +48,9 @@ button {
     font: inherit;
 }
 
-button:hover {
+button:hover:active {
     background-color: #96b38a;
     color: black;
     border: none;
 }
+
