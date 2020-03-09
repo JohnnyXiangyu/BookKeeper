@@ -57,7 +57,7 @@ function checkCredential(cred = {id: "", passwd: ""}, res) {
                         let d = new Date();
                         collection.updateOne({username: cred.id}, 
                             {$set: {
-                                    hashkey: result.key,
+                                    sessionkey: result.key,
                                     last_active: d.getTime(),
                                 }},
                             (err, res) => {
