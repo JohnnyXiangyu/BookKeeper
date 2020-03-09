@@ -38,11 +38,17 @@ function checkCredential(cred = {id: "", passwd: ""}, res) {
     let ret = 0;
 
     db.connect((err) => {
-        if (!err) {
-            const collection = db.db("bookkeeper").collection("user_test");
-            collection.find({username: cred.id}).toArray((err, docs) => {
+        if (err) {
+            db.close();
+            console.log("db connection error");
+            throw(err);
+        }
+        const collection = db.db("bookkeeper").collection("user_test");
+        collection.find({username: cred.id}).toArray(
+            (err, docs) => {
                 if (err) {
                     db.close();
+                    console.log("collection find error");
                     throw(err);
                 }
                 if (docs.length === 0) { // no such user
@@ -59,10 +65,13 @@ function checkCredential(cred = {id: "", passwd: ""}, res) {
                             {$set: {
                                     sessionkey: result.key,
                                     last_active: d.getTime(),
-                                }},
-                            (err, res) => {
+                                }})
+                            .then((res, err) => {
                                 db.close();
-                                if (err) throw(err);
+                                if (err) {
+                                    console.log(err.message);
+                                    throw(err);
+                                }
                             });
                     }
                 }
@@ -72,11 +81,6 @@ function checkCredential(cred = {id: "", passwd: ""}, res) {
                 }
                 res.end(JSON.stringify(result));
             });
-        }
-        else {
-            console.log("connection failed");
-            db.close();
-        }
     });
 }
 
