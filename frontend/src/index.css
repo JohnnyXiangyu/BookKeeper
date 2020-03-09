@@ -34,13 +34,15 @@ body {
     font: inherit;
 }
 
-.sub input:hover:active {
+.sub input:hover,
+.sub input:focus,
+.sub input:active {
     background-color: #96b38a;
     color: black;
     border: none;
 }
 
-button {
+button.general_purpose {
     background-color: transparent;
     color: #96b38a;
     border: none;
@@ -48,9 +50,15 @@ button {
     font: inherit;
 }
 
-button:hover:active {
+button.general_purpose:focus,
+button.general_purpose:hover {
     background-color: #96b38a;
     color: black;
     border: none;
 }
 
+button.general_purpose:active {
+	background-color: transparent;
+    color: #96b38a;
+    border: none;
+}

@@ -2,12 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+// some function components, including button
+function GpButton(props) {
+    return <button 
+            onClick={props.onClick}
+            className="general_purpose">
+                {props.text}
+            </button>
+}
+
 class GetPanel extends React.Component {
     render() {
         return (
             <div>
                 <p>this is get panel</p>
-                <button onClick={() => this.props.onReturn()}>BACK TO MENU</button>
+                <GpButton text="BACK TO MENU" onClick={() => this.props.onReturn()} />
             </div>
         );
     }
@@ -42,7 +51,7 @@ class PostPanel extends React.Component {
         return (
             <div>
                 <p>{message}</p>
-                <button onClick={this.props.onReturn}>BACK TO MENU</button>
+                <GpButton text="BACK TO MENU" onClick={this.props.onReturn} />
             </div>
         );
     }
@@ -53,11 +62,11 @@ class Menu extends React.Component {
         return (
             <div>
                 <p>THIS IS MENU</p>
-                <button onClick={() => this.props.nav("post")}>UPLOAD RECORD</button>
+                <GpButton text="UPLOAD RECORD" onClick={() => this.props.nav("post")} />
                 <br />
-                <button onClick={() => this.props.nav("get")}>VIEW RECORDS</button>
+                <GpButton text="VIEW RECORDS" onClick={() => this.props.nav("get")} />
                 <br />
-                <button onClick={this.props.onReturn}>LOG OUT</button>
+                <GpButton text="LOG OUT" onClick={this.props.onReturn} />
             </div>);
     }
 }
@@ -65,7 +74,7 @@ class Menu extends React.Component {
 class Login extends React.Component {
     render() {
         return (
-            <form onSubmit={this.props.onSubmit} class="login_panel" autocomplete="off">
+            <form onSubmit={this.props.onSubmit} className="login_panel" autoComplete="off">
                 <div class="login_input">
                     <input type="text" name="id" placeholder="[username]"/>
                 </div>
