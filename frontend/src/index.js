@@ -71,14 +71,90 @@ class Menu extends React.Component {
 }
 
 class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            state: "login", // login, processing, fail
+            credential: {
+                id: "",
+                passwd: "",
+            }
+        };
+    }
+
+    resetLogin = () => {
+        this.setState({
+            state: "login", // login, processing, fail
+            credential: {
+                id: "",
+                passwd: "",
+            }
+        });
+    }
+
+    loginSubmitHandler = (event) => {
+        event.preventDefault();
+        const passwd = event.target.passwd.value;
+        const uid = event.target.id.value;
+        console.log("id: " + uid + " password: " + passwd);
+
+        const credential = {
+            id: uid,
+            passwd: passwd,
+        };
+
+        this.logIn(credential);
+    }
+
+    // send a request to backend server for a session key (with fetch API)
+    // for now just settle for plain text, tho the key would be a random hash
+    logIn(credential = {}) {
+        const url = "http://localhost:9000/login";
+        fetch(url, {
+            method: "POST",
+            cache: "no-cache",
+            headers: {
+                "Content-type": "application/json",
+            },
+            redirect: "follow",
+            body: JSON.stringify(credential),
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                if (res.valid === "yes") {
+                    this.props.onSuccess(res.key, credential);
+                }
+                else {
+                    this.setState({state: "loginFail"});
+                }
+            });
+        // before promise returns: goto processing page
+        this.setState({
+            state: "processing",
+        })
+    }
+
     render() {
-        return (
-            <form onSubmit={this.props.onSubmit} className="login_panel" autoComplete="off">
-                <input type="text" name="id" placeholder="[username]"/>
-                <input type="text" name="passwd" placeholder="[password]"/>
-                <input type="submit" value="LOGIN"/>
-            </form>
-        );
+        if (this.state.state === "login") {
+            return (
+                <form onSubmit={this.loginSubmitHandler} className="login_panel" autoComplete="off">
+                    <input type="text" name="id" placeholder="[username]"/>
+                    <input type="text" name="passwd" placeholder="[password]"/>
+                    <input type="submit" value="LOGIN"/>
+                </form>
+            );
+        }
+        else if (this.state.state === "processing") {
+            return <p>CONTACTING SERVER...</p>;
+        }
+        else if (this.state.state === "loginFail") {
+            return (
+                <div>
+                    <p>GIVEN PASSWORD AND USERNAME DON'T MATCH</p>
+                    <GpButton text="BACK" onClick={this.resetLogin} />
+                </div>
+            )
+        }
     }
 }
 
@@ -100,7 +176,6 @@ class MainPanel extends React.Component {
     // handle "back" behavior from each panel
     goBack(state) {
         if (state === "menu") {
-            this.logOut();
             this.setState({
                 state: "login",
                 key: "",
@@ -123,58 +198,21 @@ class MainPanel extends React.Component {
         }
     }
 
-    // send a request to backend server for a session key (with fetch API)
-    // for now just settle for plain text, tho the key would be a random hash
-    logIn(credential = {}) {
-        const url = "http://169.232.171.10:9000/login";
-        fetch(url, {
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-type": "application/json",
-            },
-            redirect: "follow",
-            body: JSON.stringify(credential),
-        })
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.valid === "yes") {
-                    this.setState({
-                        key: res.key,
-                        state: "menu",
-                    });
-                }
-                else {
-                    alert("Login failed: wrong credentials!")
-                    console.log(res);
-                }
-            });
-    }
-
-    // TODO: tell server to delete current session key
-    logOut() {
-        alert("log out!");
-    }
-
-    loginSubmitHandler = (event) => {
-        event.preventDefault();
-        const passwd = event.target.passwd.value;
-        const uid = event.target.id.value;
-        console.log("id: " + uid + " password: " + passwd);
-
-        const credential = {
-            id: uid,
-            passwd: passwd,
-        };
-
-        this.logIn(credential);
+    // let login component respond a session key
+    loginSuccessHandler = (session_key="", cred={}) => {
+        console.log(cred);
+        this.setState({
+            key: session_key,
+            state: "menu",
+            credential: cred,
+        });
     }
 
     render() {
         let toDisplay;
         const state = this.state.state;
         if (state === "login") {
-            toDisplay = <Login onSubmit={this.loginSubmitHandler} />;
+            toDisplay = <Login onSuccess={this.loginSuccessHandler}/>;
         }
         else if (state === "menu") {
             toDisplay = <Menu
@@ -185,11 +223,13 @@ class MainPanel extends React.Component {
         else if (state === "post") {
             toDisplay = <PostPanel
                 onReturn={() => this.goBack("post")}
+                sessionKey={this.state.key}
             />;
         }
         else if (state === "get") {
             toDisplay = <GetPanel
                 onReturn={() => this.goBack("get")}
+                sessionKey={this.state.key}
             />;
         }
         // else if (state === "processing post") {
