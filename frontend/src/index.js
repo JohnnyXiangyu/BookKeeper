@@ -62,12 +62,11 @@ class Menu extends React.Component {
         return (
             <div>
                 <p>THIS IS MENU</p>
-                <GpButton text="UPLOAD RECORD" onClick={() => this.props.nav("post")} />
-                <br />
-                <GpButton text="VIEW RECORDS" onClick={() => this.props.nav("get")} />
-                <br />
+                <GpButton text="UPLOAD RECORD" onClick={() => this.props.nav("post")} /> <br />
+                <GpButton text="VIEW RECORDS" onClick={() => this.props.nav("get")} /> <br />
                 <GpButton text="LOG OUT" onClick={this.props.onReturn} />
-            </div>);
+            </div>
+        );
     }
 }
 
@@ -75,15 +74,9 @@ class Login extends React.Component {
     render() {
         return (
             <form onSubmit={this.props.onSubmit} className="login_panel" autoComplete="off">
-                <div class="login_input">
-                    <input type="text" name="id" placeholder="[username]"/>
-                </div>
-                <div class="login_input">
-                    <input type="text" name="passwd" placeholder="[password]"/>
-                </div>
-                <div class="sub">
-                    <input type="submit" value="LOGIN"/>
-                </div>
+                <input type="text" name="id" placeholder="[username]"/>
+                <input type="text" name="passwd" placeholder="[password]"/>
+                <input type="submit" value="LOGIN"/>
             </form>
         );
     }
