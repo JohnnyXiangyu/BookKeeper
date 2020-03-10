@@ -98,12 +98,17 @@ class Login extends React.Component {
         const uid = event.target.id.value;
         console.log("id: " + uid + " password: " + passwd);
 
-        const credential = {
-            id: uid,
-            passwd: passwd,
-        };
+        this.setState({
+            credential: {
+                id: uid,
+                passwd: passwd,
+            },
+            state: "processing",
+        })
+    }
 
-        this.logIn(credential);
+    registerSubmitHandler = (event) => {
+        
     }
 
     // send a request to backend server for a session key (with fetch API)
@@ -145,6 +150,7 @@ class Login extends React.Component {
             );
         }
         else if (this.state.state === "processing") {
+            this.logIn(this.state.credential);
             return <p>CONTACTING SERVER...</p>;
         }
         else if (this.state.state === "loginFail") {
