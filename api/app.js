@@ -29,6 +29,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+// use given static path
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
 // use cors to enable localhost
 app.use(cors());
 
