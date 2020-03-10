@@ -133,10 +133,6 @@ class Login extends React.Component {
                     this.setState({state: "loginFail"});
                 }
             });
-        // before promise returns: goto processing page
-        this.setState({
-            state: "processing",
-        })
     }
 
     render() {

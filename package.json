@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
       "start": "node api/bin/www",
+      "astart": "nodemon api/bin/www",
       "heroku-postbuild": "cd frontend && npm install && npm run build"
     },
     "dependencies": {
